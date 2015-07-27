@@ -1,0 +1,56 @@
+<%# prodcut, comment, comments %>
+
+<h3> Comments </h3>
+
+<div>
+	<% if current_user %>
+		<% if comment.new_record? %>
+			<%= form_for comment, :url=>product_comments_path(:product_id=>product.id), :remote=> true do |f| %>
+				<%= f.text_field :content %>
+				<%= f.submit "create",:class=>"btn btn-info" %>
+			<% end %>
+		<% else %>
+			<%= form_for comment, :url=>product_comment_path(:product_id=>product.id, :id=>comment.id), :method=>:patch,:remote=>true do |f| %>
+				<%= f.text_field :content %>
+				<%= f.submit "update",:class=>"btn btn-info" %>
+			<% end %>
+		<% end %>
+	
+	<% else %>
+	
+		<%= link_to "Sign-in to post your comment", user_session_path, :class=>"btn btn-primary" %>
+
+	<% end %>
+
+
+	<table class="table">
+			<tr>
+				<th> Content </th>
+				<th> User </th>
+				<th></th>
+				<th></th>
+			</tr>
+
+		<% comments.each do |comment| %>
+			<tr>
+				<td> <%= comment.content %> </td>
+				<td> <%= comment.user.username %> </td>
+
+				<% if comment.user == current_user %>
+					<td> 
+						<%= link_to "edit", edit_product_comment_path(product,comment), :remote=>true, :class=>"btn btn-primary" %>
+					</td>
+					<td> <%= link_to "delete", product_comment_path(product,comment), :method=>:delete, :remote=>true, :class=>"btn btn-danger", :data=>{:confirm=>"Are you sure?"} %>
+					</td>
+
+				<% else %>
+					<td></td>
+					<td></td>
+				<% end %>
+				
+
+			<tr>
+		<% end %>
+	</table>
+
+</tr>

@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Products</h1>
+
+<% if @product.new_record? %>
+  <%= form_for @product, :url=>products_path do |f| %>
+    <%= render :partial=>'products/form', :locals=>{:f => f} %>
+  <% end %>
+
+<% else %>
+  <%= form_for @product, :url=>product_path(@product), :method=>:patch do |f| %>
+    <%= render :partial=>'products/form', :locals=>{:f => f} %>
+  <% end %>
+
+<% end %>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Desc</th>
+      <th>Category </th>
+      <th>Price</th>
+      <th>Creator </th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.name %></td>
+        <td><%= product.desc %></td>
+        <td><%= product.category.name %></td>
+        <td><%= product.price %></td>
+        <td><%= product.user.try(:username) %> </td>
+        <td><%= link_to 'Show', product,:class=>"btn btn-primary" %></td>
+
+        <% if current_user == product.user %>
+          <td>
+            <%= link_to 'Edit', products_path(:edit_id=>product.id),:class=>"btn btn-info" %></td>
+          <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' },:class=>"btn btn-danger" %></td>
+        <% else %>
+          <td></td>
+          <td></td>
+
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
